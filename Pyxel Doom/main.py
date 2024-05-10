@@ -93,6 +93,15 @@ class Object3D:
             x, y = new_x, new_y
             # Mise à jour des coordonnées du sommet
             self.vertices[i] = [x, y, z]
+    
+    
+    def move_forward(self, distance):
+        # Move forward along the z-axis
+        self.position = (self.position[0], self.position[1], self.position[2] - distance)
+
+    def move_backward(self, distance):
+        # Move backward along the z-axis
+        self.position = (self.position[0], self.position[1], self.position[2] + distance)
 
 
 
@@ -156,15 +165,22 @@ class Game:
         if pyxel.btn(pyxel.KEY_S):
             self.object.rotate(-5,0,0)
 
+
+        if pyxel.btn(pyxel.KEY_A):
+            self.object.move_forward(10)
+        if pyxel.btn(pyxel.KEY_E):
+            self.object.move_backward(10)
+            
+
         if pyxel.btnp(pyxel.KEY_F):
             if self.display.display_mode == DISPLAY_FACE:
                 self.display.display_mode = DISPLAY_FRAME
             else:
                 self.display.display_mode = DISPLAY_FACE
 
-        pyxel.mouse(True)
-        if pyxel.frame_count % 30 == 0:
-            print(pyxel.mouse_x,pyxel.mouse_y)
+        #pyxel.mouse(True)
+        #if pyxel.frame_count % 30 == 0:
+        #    print(pyxel.mouse_x,pyxel.mouse_y)
 
 
 
