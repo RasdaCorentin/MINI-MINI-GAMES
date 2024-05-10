@@ -36,21 +36,34 @@ class Object3D:
         # Retourne une représentation textuelle de l'objet
         return f"Object3D(vertices={self.vertices}, faces={self.faces}, position={self.position})"
     
+    def set_position(self, x, y, z):
+        self.position = (x, y, z)
+    
     #créer l'image du cube
     def project(self, camera_position):
         projected_vertices = []
         for vertex in self.vertices:
+            # Calculer les coordonnées relatives du sommet par rapport à la position de l'objet
+            relative_x = vertex[0] + self.position[0]
+            relative_y = vertex[1] + self.position[1]
+            relative_z = vertex[2] + self.position[2]
 
-            # Projection perspective simple
-            #échelle par rapport à la distance de la caméra
-            # caméra_z est le pov divisé par caméra_z
-            scale_factor = camera_position[2] / (camera_position[2] - vertex[2])
-            projected_x = vertex[0] * scale_factor + camera_position[0]
-            projected_y = vertex[1] * scale_factor + camera_position[1]
+            # Calculer la distance entre le sommet relatif et la caméra
+            dx = relative_x - camera_position[0]
+            dy = relative_y - camera_position[1]
+            dz = relative_z - camera_position[2]
 
-            #on rentre les coordonée de la figure  selon x et y après projection 
+            # Projection perspective
+            if dz != 0:
+                scale_factor = camera_position[2] / dz
+                projected_x = dx * scale_factor + camera_position[0]
+                projected_y = dy * scale_factor + camera_position[1]
+            else:
+                projected_x = relative_x
+                projected_y = relative_y
+
             projected_vertices.append((projected_x, projected_y))
-        
+
         return projected_vertices
 
     def move(self, dx, dy, dz):
@@ -96,12 +109,16 @@ class Object3D:
     
     
     def move_forward(self, distance):
-        # Move forward along the z-axis
-        self.position = (self.position[0], self.position[1], self.position[2] - distance)
+        """
+        Rapproche l'objet de la caméra en déplaçant sa position le long de l'axe Z.
+        """
+        self.position = (self.position[0], self.position[1], self.position[2] + distance)
 
     def move_backward(self, distance):
-        # Move backward along the z-axis
-        self.position = (self.position[0], self.position[1], self.position[2] + distance)
+        """
+        Éloigne l'objet de la caméra en déplaçant sa position le long de l'axe Z.
+        """
+        self.position = (self.position[0], self.position[1], self.position[2] - distance)
 
 
 
@@ -131,7 +148,7 @@ class Game:
                 [0, 3, 7, 4],  # Haut
                 [1, 2, 6, 5]   # Bas
             ],
-            position=(0, 0, 0)  # Position initiale du cube 
+            position=(500, 500, -100)  # Position initiale du cube 
         )
 
 
@@ -143,33 +160,36 @@ class Game:
 
 
     def update(self):
-        if pyxel.btn(pyxel.KEY_LEFT):
-            self.camera_position[0] -= 10
-        if pyxel.btn(pyxel.KEY_RIGHT):
-            self.camera_position[0] += 10
-        if pyxel.btn(pyxel.KEY_UP):
-            self.camera_position[1] -= 10
-        if pyxel.btn(pyxel.KEY_DOWN):
-            self.camera_position[1] += 10
-            
-        # Vérifiez les entrées de l'utilisateur ou mettez en œuvre une logique de déplacement prédéfinie
+        if pyxel.btn(pyxel.KEY_D):
+            self.object.set_position(self.object.position[0] - 10, self.object.position[1], self.object.position[2])
         if pyxel.btn(pyxel.KEY_Q):
+            self.object.set_position(self.object.position[0] + 10, self.object.position[1], self.object.position[2])
+        if pyxel.btn(pyxel.KEY_Z):
+            self.object.set_position(self.object.position[0], self.object.position[1], self.object.position[2] - 10)
+        if pyxel.btn(pyxel.KEY_S):
+            self.object.set_position(self.object.position[0], self.object.position[1], self.object.position[2] + 10)
+
+
+        # Ajout des contrôles pour changer la hauteur
+        if pyxel.btn(pyxel.KEY_A):
+            self.object.set_position(self.object.position[0], self.object.position[1] - 10, self.object.position[2])
+        if pyxel.btn(pyxel.KEY_E):
+            self.object.set_position(self.object.position[0], self.object.position[1] + 10, self.object.position[2])
+
+
+        # Vérifiez les entrées de l'utilisateur ou mettez en œuvre une logique de déplacement prédéfinie
+        if pyxel.btn(pyxel.KEY_LEFT):
             self.object.rotate(0,5,0)     
 
-        if pyxel.btn(pyxel.KEY_D):
+        if pyxel.btn(pyxel.KEY_RIGHT):
             self.object.rotate(0,-5,0)
 
-        if pyxel.btn(pyxel.KEY_Z):
+        if pyxel.btn(pyxel.KEY_UP):
             self.object.rotate(5,0,0)
 
-        if pyxel.btn(pyxel.KEY_S):
+        if pyxel.btn(pyxel.KEY_DOWN):
             self.object.rotate(-5,0,0)
 
-
-        if pyxel.btn(pyxel.KEY_A):
-            self.object.move_forward(10)
-        if pyxel.btn(pyxel.KEY_E):
-            self.object.move_backward(10)
             
 
         if pyxel.btnp(pyxel.KEY_F):
