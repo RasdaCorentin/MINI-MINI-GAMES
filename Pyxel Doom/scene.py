@@ -1,3 +1,4 @@
+
 import pyxel
 from display import Display
 from input_handler import InputHandler
@@ -21,14 +22,14 @@ class Scene:
         [-50, 50, 50]     # Sommet 8
     ],
     faces=[
-        ([0, 1, 2, 3],3),  # Face avant
+        ([0, 1, 2, 3],2),  # Face avant
         ([4, 5, 6, 7],3),  # Face arrière
-        ([0, 1, 5, 4],3),  # Côté gauche
-        ([2, 3, 7, 6],3),  # Côté droit
-        ([0, 3, 7, 4],3),  # Haut
-        ([1, 2, 6, 5],3),   # Bas
+        ([0, 1, 5, 4],4),  # Côté gauche
+        ([2, 3, 7, 6],5),  # Côté droit
+        ([0, 3, 7, 4],8),  # Haut
+        ([1, 2, 6, 5],9),   # Bas
     ],
-    position=(0, 0, -100),
+    position=(self.display.width/2, self.display.height/2, -100),
 
     
         )
