@@ -12,6 +12,8 @@ class Object3D:
         #sa position dans l'espace
         self.position = position
 
+        self.face_colors = [(7, 7, 7)] * len(faces)
+        
     def __str__(self):
         # Retourne une représentation textuelle de l'objet
         return f"Object3D(vertices={self.vertices}, faces={self.faces}, position={self.position})"

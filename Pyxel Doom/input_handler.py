@@ -12,7 +12,7 @@ class InputHandler:
     def handle_input(self):
 
 
-        #Controle pour le  déplacement
+        #Controle pour le  déplacement horizontale
         if pyxel.btn(pyxel.KEY_D):
             self.scene.move_object(-10, 0, 0)
 

@@ -21,18 +21,25 @@ class Scene:
         [-50, 50, 50]     # Sommet 8
     ],
     faces=[
-        [0, 1, 5, 4],  # Côté gauche
-        [2, 3, 7, 6],  # Côté droit
-        [0, 3, 7, 4],  # Haut
-        [1, 2, 6, 5]   # Bas
+        ([0, 1, 2, 3],3),  # Face avant
+        ([4, 5, 6, 7],3),  # Face arrière
+        ([0, 1, 5, 4],3),  # Côté gauche
+        ([2, 3, 7, 6],3),  # Côté droit
+        ([0, 3, 7, 4],3),  # Haut
+        ([1, 2, 6, 5],3),   # Bas
     ],
-            position=(0, 0, -100)
+    position=(0, 0, -100),
+
+    
         )
         
         self.renderer = Renderer(self.display, self.object3d, self.camera)
         self.input_handler = InputHandler(self)
 
         pyxel.init(self.display.width - 200, self.display.height - 200, title="3D Projection", fps=60)
+
+    def change_face_color(self, face_index, color_tuple):
+        self.object3d.face_colors[face_index] = color_tuple
 
     def run(self):
         pyxel.run(self.update, self.draw)
@@ -49,7 +56,9 @@ class Scene:
         else:
             self.renderer.draw_lines(projected_vertices)
 
+    
     def move_object(self, dx, dy, dz):
+
         self.object3d.set_position(self.object3d.position[0] + dx,
-                                self.object3d.position[1] + dy,
-                                self.object3d.position[2] + dz)
+                                   self.object3d.position[1] + dy,
+                                   self.object3d.position[2] + dz)
